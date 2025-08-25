@@ -1,7 +1,8 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import axiosInstance from '../api/axiosInstance';
-import { createCustomer } from '../api/profileApi';
+import { loginAdmin, loginCustomer } from '../api/profileApi';
 
 interface User {
   id: string;
@@ -15,10 +16,10 @@ interface User {
 interface AuthContextType {
   currentUser: User | null;
   role: 'admin' | 'user' | 'superadmin' | null;
-  login: (email: string, password: string, role?: 'admin' | 'user') => Promise<void>;
-  register: (email: string, password: string, name: string, role?: 'admin' | 'user') => Promise<void>;
-  logout: () => Promise<void>;
   loading: boolean;
+  login: (email: string, password: string, loginRole?: 'admin' | 'user') => Promise<boolean>;
+  logout: () => void;
+  register: (name: string, email: string, password: string) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -41,102 +42,116 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const savedUser = localStorage.getItem('currentUser');
     const savedRole = localStorage.getItem('userRole');
     
-    if (savedUser) {
-      setCurrentUser(JSON.parse(savedUser));
-    }
-    if (savedRole) {
-      setRole(savedRole as 'admin' | 'user' | 'superadmin');
+    if (savedUser && savedRole) {
+      try {
+        const user = JSON.parse(savedUser);
+        setCurrentUser(user);
+        setRole(savedRole as 'admin' | 'user' | 'superadmin');
+      } catch (error) {
+        console.error('Failed to parse saved user data:', error);
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('userRole');
+      }
     }
   }, []);
 
-  const login = async (email: string, password: string, loginRole: 'admin' | 'user' = 'user') => {
+  const login = async (email: string, password: string, loginRole: 'admin' | 'user' = 'user'): Promise<boolean> => {
     setLoading(true);
     try {
-      console.log('Attempting login as:', loginRole);
-      const endpoint = loginRole === 'admin' ? '/admin/login' : '/customer/login';
-      const res = await axiosInstance.post(endpoint, { email, password });
-
-      console.log('Login response:', res.data);
-
-      // Extract user data based on common response patterns
-      const userData = res.data.user || res.data.data?.user || res.data;
-      // Use the loginRole as the definitive role since that's what the user selected
-      const userRole = loginRole;
-
-      const user: User = {
-        id: userData.id || userData._id || Date.now().toString(),
-        email: userData.email || email,
-        name: userData.name || userData.firstName || userData.lastName || 'User',
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        role: userRole
-      };
-
-      console.log('Setting user:', user);
-      console.log('Setting role:', userRole);
-
-      setCurrentUser(user);
-      setRole(userRole);
+      console.log('Attempting login as:', loginRole, 'with email:', email);
       
-      // Save to localStorage
-      localStorage.setItem('currentUser', JSON.stringify(user));
-      localStorage.setItem('userRole', userRole);
-      
-      toast.success(`${userRole === 'admin' ? 'Admin' : 'User'} logged in!`);
+      let response;
+      if (loginRole === 'admin') {
+        response = await loginAdmin({ email, password });
+      } else {
+        response = await loginCustomer({ email, password });
+      }
+
+      console.log('Login response:', response);
+
+      if (response && (response.success || response.id || response.email)) {
+        const userData: User = {
+          id: response.id?.toString() || response.userId?.toString() || email,
+          email: response.email || email,
+          name: response.name || `${response.firstName || ''} ${response.lastName || ''}`.trim() || 'User',
+          firstName: response.firstName,
+          lastName: response.lastName,
+          role: loginRole
+        };
+
+        setCurrentUser(userData);
+        setRole(loginRole);
+        
+        // Save to localStorage
+        localStorage.setItem('currentUser', JSON.stringify(userData));
+        localStorage.setItem('userRole', loginRole);
+        
+        toast.success(`Welcome back, ${userData.name}!`);
+        return true;
+      } else {
+        throw new Error('Invalid response from server');
+      }
     } catch (error: any) {
       console.error('Login error:', error);
-      const errorMessage = error.response?.data?.message || error.response?.data || error.message || 'Failed to log in';
+      const errorMessage = error?.response?.data?.message || error?.message || 'Login failed. Please check your credentials.';
       toast.error(errorMessage);
-      throw new Error(errorMessage);
+      return false;
     } finally {
       setLoading(false);
     }
   };
 
-  const register = async (
-    email: string,
-    password: string,
-    name: string,
-    registerRole: 'admin' | 'user' = 'user'
-  ) => {
+  const register = async (name: string, email: string, password: string): Promise<boolean> => {
     setLoading(true);
     try {
-      if (registerRole === 'admin') {
-        await axiosInstance.post('/admin/create', {
-          email,
-          password,
-          firstName: name,
-          lastName: '',
-        });
+      const [firstName, ...lastNameParts] = name.split(' ');
+      const lastName = lastNameParts.join(' ');
+
+      const customerData = {
+        firstName,
+        lastName,
+        email,
+        password
+      };
+
+      const response = await axiosInstance.post('/customer/create', customerData);
+      
+      if (response.data && (response.data.success || response.data.id)) {
+        toast.success('Registration successful! Please log in.');
+        return true;
       } else {
-        await createCustomer({ email, password, firstName: name, lastName: '' });
+        throw new Error('Registration failed');
       }
-      toast.success(`${registerRole === 'admin' ? 'Admin' : 'User'} account created!`);
     } catch (error: any) {
-      const errorMessage = error.response?.data?.message || error.response?.data || error.message || 'Failed to create account';
+      console.error('Registration error:', error);
+      const errorMessage = error?.response?.data?.message || 'Registration failed. Please try again.';
       toast.error(errorMessage);
-      throw new Error(errorMessage);
+      return false;
     } finally {
       setLoading(false);
     }
   };
 
-  const logout = async () => {
+  const logout = () => {
     setCurrentUser(null);
     setRole(null);
     localStorage.removeItem('currentUser');
     localStorage.removeItem('userRole');
-    toast.success('Successfully logged out!');
+    toast.success('Logged out successfully');
   };
 
   const value = {
     currentUser,
     role,
-    login,
-    register,
-    logout,
     loading,
+    login,
+    logout,
+    register
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

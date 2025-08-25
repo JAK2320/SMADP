@@ -1,92 +1,118 @@
 
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Footer from './components/Footer';
-import Header from './components/Header';
-import ProtectedRoute from './components/ProtectedRoute';
-import UnauthorizedPage from './components/UnauthorizedPages';
 import { AuthProvider } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
-import AdminDashboard from './pages/AdminDashboard';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedAdminRoute from './components/ProtectedAdminRoute';
+
+// Pages
+import Home from './pages/Home';
+import Products from './pages/Products';
+import ProductDetail from './pages/ProductDetail';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
-import Home from './pages/Home';
 import Login from './pages/Login';
-import ProductDetail from './pages/ProductDetail';
-import Products from './pages/Products';
-import Profile from './pages/Profile';
 import Register from './pages/Register';
-import './index.css';
+import Profile from './pages/Profile';
+import AdminDashboard from './pages/AdminDashboard';
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <CartProvider>
-        <Router>
-          <div className="min-h-screen flex flex-col">
-            <Header />
-            <main className="flex-grow">
-              <Routes>
-                {/* Public routes */}
-                <Route path="/" element={<Home />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/products/:id" element={<ProductDetail />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/unauthorized" element={<UnauthorizedPage />} />
-                
-                {/* Protected user routes */}
-                <Route 
-                  path="/cart" 
-                  element={
-                    <ProtectedRoute allowedRoles={['user', 'admin', 'superadmin']}>
-                      <Cart />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/checkout" 
-                  element={
-                    <ProtectedRoute allowedRoles={['user', 'admin', 'superadmin']}>
-                      <Checkout />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/profile" 
-                  element={
-                    <ProtectedRoute allowedRoles={['user', 'admin', 'superadmin']}>
-                      <Profile />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                {/* Admin routes */}
-                <Route 
-                  path="/admin/dashboard" 
-                  element={
-                    <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  } 
-                />
-                <Route 
-                  path="/admin" 
-                  element={
-                    <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  } 
-                />
-              </Routes>
-            </main>
-            <Footer />
-            <Toaster position="top-right" />
+    <Router>
+      <AuthProvider>
+        <CartProvider>
+          <div style={{ 
+            minHeight: '100vh', 
+            display: 'flex', 
+            flexDirection: 'column',
+            backgroundColor: '#f9fafb'
+          }}>
+            <Toaster 
+              position="top-right"
+              toastOptions={{
+                duration: 4000,
+                style: {
+                  background: '#363636',
+                  color: '#fff',
+                },
+                success: {
+                  duration: 3000,
+                  iconTheme: {
+                    primary: '#4ade80',
+                    secondary: '#fff',
+                  },
+                },
+                error: {
+                  duration: 4000,
+                  iconTheme: {
+                    primary: '#ef4444',
+                    secondary: '#fff',
+                  },
+                },
+              }}
+            />
+            
+            <Routes>
+              {/* Admin Routes - No Header/Footer */}
+              <Route 
+                path="/admin/dashboard" 
+                element={
+                  <ProtectedAdminRoute>
+                    <AdminDashboard />
+                  </ProtectedAdminRoute>
+                } 
+              />
+              
+              {/* Public Routes with Header/Footer */}
+              <Route 
+                path="/*" 
+                element={
+                  <>
+                    <Header />
+                    <main style={{ flex: 1 }}>
+                      <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/products" element={<Products />} />
+                        <Route path="/product/:id" element={<ProductDetail />} />
+                        <Route path="/cart" element={<Cart />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        
+                        {/* Protected Customer Routes */}
+                        <Route 
+                          path="/checkout" 
+                          element={
+                            <ProtectedRoute>
+                              <Checkout />
+                            </ProtectedRoute>
+                          } 
+                        />
+                        <Route 
+                          path="/profile" 
+                          element={
+                            <ProtectedRoute>
+                              <Profile />
+                            </ProtectedRoute>
+                          } 
+                        />
+                        
+                        {/* Redirect any unknown routes */}
+                        <Route path="*" element={<Navigate to="/" />} />
+                      </Routes>
+                    </main>
+                    <Footer />
+                  </>
+                } 
+              />
+            </Routes>
           </div>
-        </Router>
-      </CartProvider>
-    </AuthProvider>
+        </CartProvider>
+      </AuthProvider>
+    </Router>
   );
 };
 
