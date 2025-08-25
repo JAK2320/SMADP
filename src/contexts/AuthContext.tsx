@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import axiosInstance from '../api/axiosInstance';
-import { loginAdmin, loginCustomer } from '../api/profileApi';
+import { loginAdmin, loginCustomer, registerCustomer } from '../api/profileApi';
 
 interface User {
   id: string;
@@ -105,18 +105,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setLoading(true);
     try {
       const [firstName, ...lastNameParts] = name.split(' ');
-      const lastName = lastNameParts.join(' ');
+      const lastName = lastNameParts.join(' ') || '';
 
       const customerData = {
-        firstName,
+        firstName: firstName || '',
         lastName,
         email,
         password
       };
 
-      const response = await axiosInstance.post('/customer/create', customerData);
+      const response = await registerCustomer(customerData);
       
-      if (response.data && (response.data.success || response.data.id)) {
+      if (response && (response.success || response.id || response.email)) {
         toast.success('Registration successful! Please log in.');
         return true;
       } else {
@@ -124,7 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (error: any) {
       console.error('Registration error:', error);
-      const errorMessage = error?.response?.data?.message || 'Registration failed. Please try again.';
+      const errorMessage = error?.message || 'Registration failed. Please try again.';
       toast.error(errorMessage);
       return false;
     } finally {

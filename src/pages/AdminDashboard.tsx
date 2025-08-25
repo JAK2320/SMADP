@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -41,8 +40,8 @@ interface Product {
 }
 
 const AdminDashboard: React.FC = () => {
-  const navigate = useNavigate();
   const { currentUser, logout, role } = useAuth();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'overview' | 'customers' | 'products' | 'orders'>('overview');
   const [stats, setStats] = useState<DashboardStats>({
     totalCustomers: 0,
@@ -56,13 +55,15 @@ const AdminDashboard: React.FC = () => {
 
   useEffect(() => {
     // Redirect if not admin
-    if (!currentUser || role !== 'admin') {
+    if (currentUser && role !== 'admin') {
+      navigate('/');
+    } else if (!currentUser) {
       navigate('/login?role=admin');
-      return;
     }
-
-    // Load dashboard data
-    loadDashboardData();
+    // Load dashboard data if the user is an admin
+    if (currentUser && role === 'admin') {
+      loadDashboardData();
+    }
   }, [currentUser, role, navigate]);
 
   const loadDashboardData = async () => {
@@ -100,15 +101,16 @@ const AdminDashboard: React.FC = () => {
     navigate('/login');
   };
 
-  if (loading) {
+  // Show loading or redirect if not authenticated
+  if (!currentUser || role !== 'admin') {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh'
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '50vh' 
       }}>
-        <div>Loading dashboard...</div>
+        <p>Loading...</p>
       </div>
     );
   }
@@ -310,7 +312,7 @@ const AdminDashboard: React.FC = () => {
               Admin Dashboard
             </h1>
             <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
-              Welcome back, {currentUser?.name || 'Admin'}
+              Welcome back, {currentUser?.firstName || currentUser?.name || 'Admin'}
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

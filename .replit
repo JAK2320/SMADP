@@ -21,4 +21,8 @@ args = "npm install"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
+args = "chmod +x node_modules/.bin/vite"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
 args = "npm run dev"

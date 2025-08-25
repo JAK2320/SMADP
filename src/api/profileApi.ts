@@ -17,40 +17,115 @@ export interface LoginCredentials {
 
 // Admin Authentication
 export const registerAdmin = async (adminData: Admin) => {
-  const res = await axiosInstance.post('/admins/register', adminData);
-  return res.data;
+  try {
+    const response = await axiosInstance.post('/admin/register', adminData);
+    return response.data;
+  } catch (error: any) {
+    console.error('Admin registration error:', error);
+    if (error.response?.status === 409) {
+      throw new Error('Email already exists');
+    } else if (error.response?.status === 400) {
+      throw new Error('Invalid registration data');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Admin registration failed');
+  }
 };
 
-export const loginAdmin = async (credentials: LoginCredentials) => {
-  const res = await axiosInstance.post('/admins/login', credentials);
-  return res.data;
+export const loginAdmin = async (credentials: { email: string; password: string }) => {
+  try {
+    console.log('Attempting admin login with:', credentials.email);
+    const response = await axiosInstance.post('/admin/login', credentials);
+    console.log('Admin login response:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('Admin login error:', error);
+    // Handle specific error cases
+    if (error.response?.status === 401) {
+      throw new Error('Invalid admin credentials');
+    } else if (error.response?.status === 404) {
+      throw new Error('Admin login endpoint not found');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Admin login failed');
+  }
 };
 
 // Admin CRUD Operations
 export const getAllAdmins = async () => {
-  const res = await axiosInstance.get('/admins/all');
-  return res.data;
+  try {
+    const response = await axiosInstance.get('/admin/all');
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching all admins:', error);
+    if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Failed to fetch admins');
+  }
 };
 
 export const getAdminById = async (id: number) => {
-  const res = await axiosInstance.get(`/admins/read/${id}`);
-  return res.data;
+  try {
+    const response = await axiosInstance.get(`/admin/read/${id}`);
+    return response.data;
+  } catch (error: any) {
+    console.error(`Error fetching admin with ID ${id}:`, error);
+    if (error.response?.status === 404) {
+      throw new Error('Admin not found');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || `Failed to fetch admin with ID ${id}`);
+  }
 };
 
 export const updateAdmin = async (adminData: Admin) => {
-  const res = await axiosInstance.post('/admins/update', adminData);
-  return res.data;
+  try {
+    const response = await axiosInstance.put('/admin/update', adminData);
+    return response.data;
+  } catch (error: any) {
+    console.error('Error updating admin:', error);
+    if (error.response?.status === 400) {
+      throw new Error('Invalid admin data');
+    } else if (error.response?.status === 404) {
+      throw new Error('Admin not found');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Failed to update admin');
+  }
 };
 
 export const deleteAdmin = async (id: number) => {
-  const res = await axiosInstance.delete(`/admins/delete/${id}`);
-  return res.data;
+  try {
+    const response = await axiosInstance.delete(`/admin/delete/${id}`);
+    return response.data;
+  } catch (error: any) {
+    console.error(`Error deleting admin with ID ${id}:`, error);
+    if (error.response?.status === 404) {
+      throw new Error('Admin not found');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || `Failed to delete admin with ID ${id}`);
+  }
 };
 
 // Admin Utility function
 export const pingAdminBackend = async () => {
-  const res = await axiosInstance.get('/admins/ping');
-  return res.data;
+  try {
+    const response = await axiosInstance.get('/admin/ping');
+    return response.data;
+  } catch (error: any) {
+    console.error('Admin backend ping error:', error);
+    if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Admin backend ping failed');
+  }
 };
 
 // ==================== CUSTOMER SECTION ====================
@@ -72,59 +147,183 @@ export interface CustomerLoginRequest {
 
 // Customer CRUD Operations
 export const createCustomer = async (customerData: Customer) => {
-  const res = await axiosInstance.post('/customer/create', customerData);
-  return res.data;
+  try {
+    console.log('Attempting customer registration with:', customerData.email);
+    const response = await axiosInstance.post('/customer/create', customerData);
+    console.log('Customer registration response:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('Customer registration error:', error);
+    if (error.response?.status === 409) {
+      throw new Error('Email already exists');
+    } else if (error.response?.status === 400) {
+      throw new Error('Invalid registration data');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Registration failed');
+  }
 };
 
 export const getCustomer = async (id: string) => {
-  const res = await axiosInstance.get(`/customer/read/${id}`);
-  return res.data;
+  try {
+    const response = await axiosInstance.get(`/customer/read/${id}`);
+    return response.data;
+  } catch (error: any) {
+    console.error(`Error fetching customer with ID ${id}:`, error);
+    if (error.response?.status === 404) {
+      throw new Error('Customer not found');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || `Failed to fetch customer with ID ${id}`);
+  }
 };
 
 export const updateCustomer = async (customerData: Customer) => {
-  const res = await axiosInstance.put('/customer/update', customerData);
-  return res.data;
+  try {
+    const response = await axiosInstance.put('/customer/update', customerData);
+    return response.data;
+  } catch (error: any) {
+    console.error('Error updating customer:', error);
+    if (error.response?.status === 400) {
+      throw new Error('Invalid customer data');
+    } else if (error.response?.status === 404) {
+      throw new Error('Customer not found');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Failed to update customer');
+  }
 };
 
 export const deleteCustomer = async (id: string) => {
-  const res = await axiosInstance.delete(`/customer/delete/${id}`);
-  return res.data;
+  try {
+    const response = await axiosInstance.delete(`/customer/delete/${id}`);
+    return response.data;
+  } catch (error: any) {
+    console.error(`Error deleting customer with ID ${id}:`, error);
+    if (error.response?.status === 404) {
+      throw new Error('Customer not found');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || `Failed to delete customer with ID ${id}`);
+  }
 };
 
 export const getAllCustomers = async () => {
-  const res = await axiosInstance.get('/customer/getAll');
-  return res.data;
+  try {
+    const response = await axiosInstance.get('/customer/getAll');
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching all customers:', error);
+    if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Failed to fetch customers');
+  }
 };
 
 export const findCustomersByPaymentMethod = async (paymentMethod: string) => {
-  const res = await axiosInstance.get(`/customer/findByPaymentMethod?paymentMethod=${encodeURIComponent(paymentMethod)}`);
-  return res.data;
+  try {
+    const response = await axiosInstance.get(`/customer/findByPaymentMethod?paymentMethod=${encodeURIComponent(paymentMethod)}`);
+    return response.data;
+  } catch (error: any) {
+    console.error('Error finding customers by payment method:', error);
+    if (error.response?.status === 400) {
+      throw new Error('Invalid payment method');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Failed to find customers by payment method');
+  }
 };
 
-export const loginCustomer = async (loginData: CustomerLoginRequest) => {
-  const res = await axiosInstance.post('/customer/login', loginData);
-  return res.data;
+export const loginCustomer = async (credentials: { email: string; password: string }) => {
+  try {
+    console.log('Attempting customer login with:', credentials.email);
+    const response = await axiosInstance.post('/customer/login', credentials);
+    console.log('Customer login response:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('Customer login error:', error);
+    // Handle specific error cases
+    if (error.response?.status === 401) {
+      throw new Error('Invalid customer credentials');
+    } else if (error.response?.status === 404) {
+      throw new Error('Customer login endpoint not found');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Customer login failed');
+  }
 };
+
 
 // ==================== PROFILE SECTION ====================
 
 // Profile Management Functions
 export const getProfile = async () => {
-  const res = await axiosInstance.get('/profile');
-  return res.data;
+  try {
+    const response = await axiosInstance.get('/profile');
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching profile:', error);
+    if (error.response?.status === 404) {
+      throw new Error('Profile not found');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Failed to fetch profile');
+  }
 };
 
 export const updateProfile = async (profileData: any) => {
-  const res = await axiosInstance.put('/profile', profileData);
-  return res.data;
+  try {
+    const response = await axiosInstance.put('/profile', profileData);
+    return response.data;
+  } catch (error: any) {
+    console.error('Error updating profile:', error);
+    if (error.response?.status === 400) {
+      throw new Error('Invalid profile data');
+    } else if (error.response?.status === 404) {
+      throw new Error('Profile not found');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Failed to update profile');
+  }
 };
 
 export const changePassword = async (oldPassword: string, newPassword: string) => {
-  const res = await axiosInstance.post('/profile/change-password', { oldPassword, newPassword });
-  return res.data;
+  try {
+    const response = await axiosInstance.post('/profile/change-password', { oldPassword, newPassword });
+    return response.data;
+  } catch (error: any) {
+    console.error('Error changing password:', error);
+    if (error.response?.status === 401) {
+      throw new Error('Incorrect current password');
+    } else if (error.response?.status === 400) {
+      throw new Error('Invalid password data');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Password change failed');
+  }
 };
 
 export const deleteAccount = async () => {
-  const res = await axiosInstance.delete('/profile');
-  return res.data;
+  try {
+    const response = await axiosInstance.delete('/profile');
+    return response.data;
+  } catch (error: any) {
+    console.error('Error deleting account:', error);
+    if (error.response?.status === 404) {
+      throw new Error('Account not found');
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('Cannot connect to backend server');
+    }
+    throw new Error(error.response?.data?.message || 'Account deletion failed');
+  }
 };
