@@ -5,19 +5,27 @@ import ProductCard from '../components/ProductCard'
 import { products, categories } from '../data/products'
 
 const Products: React.FC = () => {
-  const { category } = useParams()
+  const { categoryId } = useParams()
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('name')
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 10000 })
-  const [showFilters, setShowFilters] = useState(false)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
+  const [priceRange, setPriceRange] = useState([0, 2000])
+  const [selectedCategory, setSelectedCategory] = useState('')
+
+  // Get search term from URL parameters
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const searchParam = urlParams.get('search')
+    if (searchParam) {
+      setSearchTerm(searchParam)
+    }
+  }, [])
 
   const filteredProducts = useMemo(() => {
     let filtered = products
 
     // Filter by category
-    if (category) {
-      filtered = filtered.filter(product => product.category === category)
+    if (categoryId) {
+      filtered = filtered.filter(product => product.category === categoryId)
     }
 
     // Filter by search term
@@ -30,7 +38,7 @@ const Products: React.FC = () => {
 
     // Filter by price range
     filtered = filtered.filter(product =>
-      product.price >= priceRange.min && product.price <= priceRange.max
+      product.price >= priceRange[0] && product.price <= priceRange[1]
     )
 
     // Sort products
@@ -48,9 +56,9 @@ const Products: React.FC = () => {
     })
 
     return filtered
-  }, [category, searchTerm, sortBy, priceRange])
+  }, [categoryId, searchTerm, sortBy, priceRange])
 
-  const currentCategory = categories.find(cat => cat.id === category)
+  const currentCategory = categories.find(cat => cat.id === categoryId)
 
   return (
     <div style={{ padding: '2rem 0' }}>
@@ -66,8 +74,8 @@ const Products: React.FC = () => {
             {currentCategory ? currentCategory.name : 'All Products'}
           </h1>
           <p style={{ color: '#6b7280', fontSize: '1.125rem' }}>
-            {currentCategory 
-              ? currentCategory.description 
+            {currentCategory
+              ? currentCategory.description
               : 'Browse our complete collection of university merchandise'
             }
           </p>
@@ -84,8 +92,8 @@ const Products: React.FC = () => {
         }}>
           {/* Search */}
           <div style={{ position: 'relative', flex: 1, minWidth: '300px' }}>
-            <Search 
-              size={20} 
+            <Search
+              size={20}
               style={{
                 position: 'absolute',
                 left: '0.75rem',
@@ -166,7 +174,7 @@ const Products: React.FC = () => {
             <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem' }}>
               Filters
             </h3>
-            
+
             <div className="grid md:grid-cols-3" style={{ gap: '1.5rem' }}>
               {/* Price Range */}
               <div>
@@ -177,8 +185,8 @@ const Products: React.FC = () => {
                   <input
                     type="number"
                     placeholder="Min"
-                    value={priceRange.min}
-                    onChange={(e) => setPriceRange(prev => ({ ...prev, min: Number(e.target.value) }))}
+                    value={priceRange[0]}
+                    onChange={(e) => setPriceRange(prev => [Number(e.target.value), prev[1]])}
                     className="input"
                     style={{ width: '100px' }}
                   />
@@ -186,8 +194,8 @@ const Products: React.FC = () => {
                   <input
                     type="number"
                     placeholder="Max"
-                    value={priceRange.max}
-                    onChange={(e) => setPriceRange(prev => ({ ...prev, max: Number(e.target.value) }))}
+                    value={priceRange[1]}
+                    onChange={(e) => setPriceRange(prev => [prev[0], Number(e.target.value)])}
                     className="input"
                     style={{ width: '100px' }}
                   />
@@ -195,12 +203,16 @@ const Products: React.FC = () => {
               </div>
 
               {/* Category Filter (if viewing all products) */}
-              {!category && (
+              {!categoryId && (
                 <div>
                   <label style={{ display: 'block', fontWeight: '500', marginBottom: '0.5rem' }}>
                     Category
                   </label>
-                  <select className="input">
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="input"
+                  >
                     <option value="">All Categories</option>
                     {categories.map(cat => (
                       <option key={cat.id} value={cat.id}>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
@@ -19,6 +18,10 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
+import Contact from './pages/Contact';
+import About from './pages/About';
+import Designer from './pages/Designer';
+
 
 const App: React.FC = () => {
   return (
@@ -55,7 +58,7 @@ const App: React.FC = () => {
                 },
               }}
             />
-            
+
             <Routes>
               {/* Admin Routes - No Header/Footer */}
               <Route 
@@ -66,7 +69,7 @@ const App: React.FC = () => {
                   </ProtectedAdminRoute>
                 } 
               />
-              
+
               {/* Public Routes with Header/Footer */}
               <Route 
                 path="/*" 
@@ -81,7 +84,10 @@ const App: React.FC = () => {
                         <Route path="/cart" element={<Cart />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
-                        
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/designer" element={<Designer />} />
+
                         {/* Protected Customer Routes */}
                         <Route 
                           path="/checkout" 
@@ -99,7 +105,7 @@ const App: React.FC = () => {
                             </ProtectedRoute>
                           } 
                         />
-                        
+
                         {/* Redirect any unknown routes */}
                         <Route path="*" element={<Navigate to="/" />} />
                       </Routes>
