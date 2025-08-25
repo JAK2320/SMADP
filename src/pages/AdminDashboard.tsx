@@ -8,18 +8,13 @@ const AdminDashboard: React.FC = () => {
 
   // Redirect if not admin
   useEffect(() => {
-    if (!loading) {
-      console.log('AdminDashboard - Current role:', role);
-      console.log('AdminDashboard - Current user:', currentUser);
-      
-      if (!role || (role !== 'admin' && role !== 'superadmin')) {
-        console.log('Redirecting to login - insufficient permissions');
-        navigate('/login', { 
-          state: { message: 'Please log in as admin to access this page' } 
-        });
-      }
+    if (!loading && (!role || (role !== 'admin' && role !== 'superadmin'))) {
+      console.log('Redirecting to login - insufficient permissions');
+      navigate('/login', { 
+        state: { message: 'Please log in as admin to access this page' } 
+      });
     }
-  }, [role, navigate, loading, currentUser]);
+  }, [role, navigate, loading]);
 
   if (loading) {
     return (

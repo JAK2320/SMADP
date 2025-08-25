@@ -60,12 +60,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // Extract user data based on common response patterns
       const userData = res.data.user || res.data.data?.user || res.data;
-      const userRole = userData.role || loginRole;
+      // Use the loginRole as the definitive role since that's what the user selected
+      const userRole = loginRole;
 
       const user: User = {
-        id: userData.id || userData._id,
+        id: userData.id || userData._id || Date.now().toString(),
         email: userData.email || email,
-        name: userData.name || userData.firstName || 'User',
+        name: userData.name || userData.firstName || userData.lastName || 'User',
         firstName: userData.firstName,
         lastName: userData.lastName,
         role: userRole

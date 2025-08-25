@@ -1,13 +1,14 @@
+
+import React from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Footer from './components/Footer';
 import Header from './components/Header';
-import ProtectedAdminRoute from './components/ProtectedAdminRoute';
 import ProtectedRoute from './components/ProtectedRoute';
+import UnauthorizedPage from './components/UnauthorizedPages';
 import { AuthProvider } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import AdminDashboard from './pages/AdminDashboard';
-import AdminLogin from './pages/AdminLogin';
 import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Home from './pages/Home';
@@ -16,40 +17,38 @@ import ProductDetail from './pages/ProductDetail';
 import Products from './pages/Products';
 import Profile from './pages/Profile';
 import Register from './pages/Register';
+import './index.css';
 
-function App() {
+const App: React.FC = () => {
   return (
     <AuthProvider>
       <CartProvider>
         <Router>
           <div className="min-h-screen flex flex-col">
             <Header />
-            <main className="flex-1">
+            <main className="flex-grow">
               <Routes>
+                {/* Public routes */}
                 <Route path="/" element={<Home />} />
                 <Route path="/products" element={<Products />} />
-                <Route path="/products/:category" element={<Products />} />
-                <Route path="/product/:id" element={<ProductDetail />} />
-                <Route path="/cart" element={<Cart />} />
+                <Route path="/products/:id" element={<ProductDetail />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/admin-login" element={<AdminLogin />} />
+                <Route path="/unauthorized" element={<UnauthorizedPage />} />
                 
-                {/* Admin Routes */}
+                {/* Protected user routes */}
                 <Route 
-                  path="/admin/*" 
+                  path="/cart" 
                   element={
-                    <ProtectedAdminRoute>
-                      <AdminDashboard />
-                    </ProtectedAdminRoute>
-                  }
+                    <ProtectedRoute allowedRoles={['user', 'admin', 'superadmin']}>
+                      <Cart />
+                    </ProtectedRoute>
+                  } 
                 />
-                
-                {/* Protected User Routes */}
                 <Route 
                   path="/checkout" 
                   element={
-                    <ProtectedRoute>
+                    <ProtectedRoute allowedRoles={['user', 'admin', 'superadmin']}>
                       <Checkout />
                     </ProtectedRoute>
                   } 
@@ -57,39 +56,38 @@ function App() {
                 <Route 
                   path="/profile" 
                   element={
-                    <ProtectedRoute>
+                    <ProtectedRoute allowedRoles={['user', 'admin', 'superadmin']}>
                       <Profile />
                     </ProtectedRoute>
                   } 
                 />
                 
-                {/* Catch-all route for 404 */}
-                <Route path="*" element={
-                  <div className="min-h-screen flex items-center justify-center">
-                    <div className="text-center">
-                      <h1 className="text-4xl font-bold text-gray-800 mb-4">404</h1>
-                      <p className="text-gray-600">Page not found</p>
-                    </div>
-                  </div>
-                } />
+                {/* Admin routes */}
+                <Route 
+                  path="/admin/dashboard" 
+                  element={
+                    <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ProtectedRoute allowedRoles={['admin', 'superadmin']}>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  } 
+                />
               </Routes>
             </main>
             <Footer />
+            <Toaster position="top-right" />
           </div>
-          <Toaster 
-            position="top-right"
-            toastOptions={{
-              duration: 4000,
-              style: {
-                background: '#363636',
-                color: '#fff',
-              },
-            }}
-          />
         </Router>
       </CartProvider>
     </AuthProvider>
-  )
-}
+  );
+};
 
-export default App
+export default App;

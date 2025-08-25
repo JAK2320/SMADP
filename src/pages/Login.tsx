@@ -26,7 +26,12 @@ const Login: React.FC = () => {
     setError('');
     try {
       await login(formData.email, formData.password, role);
-      navigate(role === 'admin' ? '/admin' : from, { replace: true });
+      // Navigate based on the role after successful login
+      if (role === 'admin') {
+        navigate('/admin/dashboard', { replace: true });
+      } else {
+        navigate('/', { replace: true });
+      }
     } catch (err: any) {
       setError(err?.message || 'Login failed');
     } finally {
