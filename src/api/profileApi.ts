@@ -15,119 +15,47 @@ export interface LoginCredentials {
   password: string;
 }
 
-// Admin Authentication
+// ==================== Admin Authentication ====================
+
 export const registerAdmin = async (adminData: Admin) => {
-  try {
-    const response = await axiosInstance.post('/admin/register', adminData);
-    return response.data;
-  } catch (error: any) {
-    console.error('Admin registration error:', error);
-    if (error.response?.status === 409) {
-      throw new Error('Email already exists');
-    } else if (error.response?.status === 400) {
-      throw new Error('Invalid registration data');
-    } else if (error.code === 'ECONNREFUSED') {
-      throw new Error('Cannot connect to backend server');
-    }
-    throw new Error(error.response?.data?.message || 'Admin registration failed');
-  }
+  const response = await axiosInstance.post('/admins/register', adminData);
+  return response.data;
 };
 
-export const loginAdmin = async (credentials: { email: string; password: string }) => {
-  try {
-    console.log('Attempting admin login with:', credentials.email);
-    const response = await axiosInstance.post('/admin/login', credentials);
-    console.log('Admin login response:', response.data);
-    return response.data;
-  } catch (error: any) {
-    console.error('Admin login error:', error);
-    // Handle specific error cases
-    if (error.response?.status === 401) {
-      throw new Error('Invalid admin credentials');
-    } else if (error.response?.status === 404) {
-      throw new Error('Admin login endpoint not found');
-    } else if (error.code === 'ECONNREFUSED') {
-      throw new Error('Cannot connect to backend server');
-    }
-    throw new Error(error.response?.data?.message || 'Admin login failed');
-  }
+export const loginAdmin = async (credentials: LoginCredentials) => {
+  const response = await axiosInstance.post('/admins/login', credentials);
+  return response.data;
 };
 
-// Admin CRUD Operations
+// ==================== Admin CRUD Operations ====================
+
 export const getAllAdmins = async () => {
-  try {
-    const response = await axiosInstance.get('/admin/all');
-    return response.data;
-  } catch (error: any) {
-    console.error('Error fetching all admins:', error);
-    if (error.code === 'ECONNREFUSED') {
-      throw new Error('Cannot connect to backend server');
-    }
-    throw new Error(error.response?.data?.message || 'Failed to fetch admins');
-  }
+  const response = await axiosInstance.get('/admins/all');
+  return response.data;
 };
 
 export const getAdminById = async (id: number) => {
-  try {
-    const response = await axiosInstance.get(`/admin/read/${id}`);
-    return response.data;
-  } catch (error: any) {
-    console.error(`Error fetching admin with ID ${id}:`, error);
-    if (error.response?.status === 404) {
-      throw new Error('Admin not found');
-    } else if (error.code === 'ECONNREFUSED') {
-      throw new Error('Cannot connect to backend server');
-    }
-    throw new Error(error.response?.data?.message || `Failed to fetch admin with ID ${id}`);
-  }
+  const response = await axiosInstance.get(`/admins/read/${id}`);
+  return response.data;
 };
 
 export const updateAdmin = async (adminData: Admin) => {
-  try {
-    const response = await axiosInstance.put('/admin/update', adminData);
-    return response.data;
-  } catch (error: any) {
-    console.error('Error updating admin:', error);
-    if (error.response?.status === 400) {
-      throw new Error('Invalid admin data');
-    } else if (error.response?.status === 404) {
-      throw new Error('Admin not found');
-    } else if (error.code === 'ECONNREFUSED') {
-      throw new Error('Cannot connect to backend server');
-    }
-    throw new Error(error.response?.data?.message || 'Failed to update admin');
-  }
+  // backend expects POST, not PUT
+  const response = await axiosInstance.post('/admins/update', adminData);
+  return response.data;
 };
 
 export const deleteAdmin = async (id: number) => {
-  try {
-    const response = await axiosInstance.delete(`/admin/delete/${id}`);
-    return response.data;
-  } catch (error: any) {
-    console.error(`Error deleting admin with ID ${id}:`, error);
-    if (error.response?.status === 404) {
-      throw new Error('Admin not found');
-    } else if (error.code === 'ECONNREFUSED') {
-      throw new Error('Cannot connect to backend server');
-    }
-    throw new Error(error.response?.data?.message || `Failed to delete admin with ID ${id}`);
-  }
+  const response = await axiosInstance.delete(`/admins/delete/${id}`);
+  return response.data;
 };
 
-// Admin Utility function
+// ==================== Admin Utility Function ====================
+
 export const pingAdminBackend = async () => {
-  try {
-    const response = await axiosInstance.get('/admin/ping');
-    return response.data;
-  } catch (error: any) {
-    console.error('Admin backend ping error:', error);
-    if (error.code === 'ECONNREFUSED') {
-      throw new Error('Cannot connect to backend server');
-    }
-    throw new Error(error.response?.data?.message || 'Admin backend ping failed');
-  }
+  const response = await axiosInstance.get('/admins/ping');
+  return response.data;
 };
-
 // ==================== CUSTOMER SECTION ====================
 
 export interface Customer {
@@ -145,8 +73,8 @@ export interface CustomerLoginRequest {
   password: string;
 }
 
-// Customer CRUD Operations
-export const createCustomer = async (customerData: Customer) => {
+// Customer CRUD Operations - Updated for consistency
+export const registerCustomer = async (customerData: Customer) => {
   try {
     console.log('Attempting customer registration with:', customerData.email);
     const response = await axiosInstance.post('/customer/create', customerData);
@@ -164,6 +92,9 @@ export const createCustomer = async (customerData: Customer) => {
     throw new Error(error.response?.data?.message || 'Registration failed');
   }
 };
+
+// Alias for backward compatibility
+export const createCustomer = registerCustomer;
 
 export const getCustomer = async (id: string) => {
   try {
@@ -260,7 +191,6 @@ export const loginCustomer = async (credentials: { email: string; password: stri
   }
 };
 
-
 // ==================== PROFILE SECTION ====================
 
 // Profile Management Functions
@@ -326,4 +256,32 @@ export const deleteAccount = async () => {
     }
     throw new Error(error.response?.data?.message || 'Account deletion failed');
   }
+};
+
+// Export all functions for easy importing
+export default {
+  // Admin exports
+  registerAdmin,
+  loginAdmin,
+  getAllAdmins,
+  getAdminById,
+  updateAdmin,
+  deleteAdmin,
+  pingAdminBackend,
+  
+  // Customer exports
+  registerCustomer,
+  createCustomer, // alias for backward compatibility
+  getCustomer,
+  updateCustomer,
+  deleteCustomer,
+  getAllCustomers,
+  findCustomersByPaymentMethod,
+  loginCustomer,
+  
+  // Profile exports
+  getProfile,
+  updateProfile,
+  changePassword,
+  deleteAccount
 };

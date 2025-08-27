@@ -1,20 +1,19 @@
+import {
+  DollarSign,
+  Edit,
+  Eye,
+  LogOut,
+  Package,
+  Plus,
+  ShoppingCart,
+  Trash2,
+  TrendingUp,
+  Users
+} from 'lucide-react';
 import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-  Users, 
-  Package, 
-  ShoppingCart, 
-  DollarSign, 
-  TrendingUp, 
-  Settings,
-  LogOut,
-  Eye,
-  Edit,
-  Trash2,
-  Plus
-} from 'lucide-react';
-import toast from 'react-hot-toast';
 
 interface DashboardStats {
   totalCustomers: number;

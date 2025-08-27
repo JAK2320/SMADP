@@ -1,6 +1,6 @@
 
+import { Clock, Mail, MapPin, Phone, Send } from 'lucide-react'
 import React, { useState } from 'react'
-import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react'
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -62,7 +62,7 @@ const Contact: React.FC = () => {
                   Address
                 </h3>
                 <p style={{ color: '#6b7280' }}>
-                  University Avenue, Rondebosch<br />
+                  District Six Campus, Room E3.18, 3rd Floor, Engineering Building<br />
                   Cape Town, 7700, South Africa
                 </p>
               </div>
@@ -109,7 +109,7 @@ const Contact: React.FC = () => {
                   Email
                 </h3>
                 <p style={{ color: '#6b7280' }}>
-                  marketing@university.ac.za
+                  230558135@mycput.ac.za
                 </p>
               </div>
             </div>

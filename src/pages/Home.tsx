@@ -54,7 +54,7 @@ const Home: React.FC = () => {
             </div>
             <div style={{ textAlign: 'center' }}>
               <img
-                src="https://images.pexels.com/photos/5428836/pexels-photo-5428836.jpeg"
+                src="https://assets.isu.pub/document-structure/240228122001-57b0a5b8cc3692fc880d0dd14f2549e2/v1/6befed300c5553dc0da1241b19d2d3b9.jpeg"
                 alt="University Students"
                 style={{
                   width: '100%',

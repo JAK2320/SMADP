@@ -11,7 +11,7 @@ const About: React.FC = () => {
           About University Store
         </h1>
         <p style={{ fontSize: '1.25rem', color: '#6b7280', maxWidth: '800px', margin: '0 auto', lineHeight: 1.6 }}>
-          We are the official merchandise store for the University Marketing Department, 
+          We are the official merchandise store for the University Marketing Department of CPUT, 
           providing high-quality products that represent our institution with pride and excellence.
         </p>
       </section>
