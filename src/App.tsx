@@ -70,6 +70,9 @@ const App: React.FC = () => {
                 } 
               />
 
+              {/* Designer Route - No Header/Footer for admin access */}
+              <Route path="/designer" element={<Designer />} />
+
               {/* Public Routes with Header/Footer */}
               <Route 
                 path="/*" 
@@ -80,34 +83,27 @@ const App: React.FC = () => {
                       <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/products" element={<Products />} />
-                        <Route path="/product/:id" element={<ProductDetail />} />
+                        <Route path="/products/:id" element={<ProductDetail />} />
                         <Route path="/cart" element={<Cart />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
                         <Route path="/contact" element={<Contact />} />
                         <Route path="/about" element={<About />} />
-                        <Route path="/designer" element={<Designer />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
 
-                        {/* Protected Customer Routes */}
-                        <Route 
-                          path="/checkout" 
-                          element={
-                            <ProtectedRoute>
-                              <Checkout />
-                            </ProtectedRoute>
-                          } 
-                        />
-                        <Route 
-                          path="/profile" 
-                          element={
-                            <ProtectedRoute>
-                              <Profile />
-                            </ProtectedRoute>
-                          } 
-                        />
+                        {/* Protected Routes */}
+                        <Route path="/checkout" element={
+                          <ProtectedRoute>
+                            <Checkout />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/profile" element={
+                          <ProtectedRoute>
+                            <Profile />
+                          </ProtectedRoute>
+                        } />
 
-                        {/* Redirect any unknown routes */}
-                        <Route path="*" element={<Navigate to="/" />} />
+                        {/* Catch all - redirect to home */}
+                        <Route path="*" element={<Navigate to="/" replace />} />
                       </Routes>
                     </main>
                     <Footer />
