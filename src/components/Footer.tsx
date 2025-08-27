@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Mail, MapPin, Phone, Twitter } from 'lucide-react'
+import { Facebook, Instagram, Mail, Phone, Twitter } from 'lucide-react'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -98,7 +98,7 @@ const Footer: React.FC = () => {
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <MapPin size={16} style={{ color: '#9ca3af' }} />
+                  <span style={{ color: '#9ca3af', fontSize: '1rem' }}>📍</span>
                   <span style={{ color: '#9ca3af', fontSize: '0.875rem' }}>
                     District Six Campus, Room E3.18, 3rd Floor, Engineering Building
                   </span>

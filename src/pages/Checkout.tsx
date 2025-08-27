@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { CreditCard, MapPin, User, Mail, Phone } from 'lucide-react'
+import { CreditCard, User, Mail, Phone } from 'lucide-react'
 import { useCart } from '../contexts/CartContext'
 import { useAuth } from '../contexts/AuthContext'
 import toast from 'react-hot-toast'
@@ -144,7 +144,7 @@ const Checkout: React.FC = () => {
               {/* Shipping Address */}
               <div className="card" style={{ padding: '2rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-                  <MapPin size={20} style={{ color: '#3b82f6' }} />
+                  <span style={{ color: '#3b82f6', fontSize: '1.2rem' }}>📍</span>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: '600' }}>Shipping Address</h3>
                 </div>
                 

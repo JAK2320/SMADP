@@ -1,5 +1,5 @@
 
-import { Clock, Mail, MapPin, Phone, Send } from 'lucide-react'
+import { Clock, Mail, Phone, Send } from 'lucide-react'
 import React, { useState } from 'react'
 
 const Contact: React.FC = () => {
@@ -53,9 +53,11 @@ const Contact: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: 'white'
+                color: 'white',
+                fontSize: '1.2rem',
+                fontWeight: 'bold'
               }}>
-                <MapPin size={20} />
+                📍
               </div>
               <div>
                 <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.25rem' }}>

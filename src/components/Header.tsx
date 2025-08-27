@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { ShoppingCart, User, Menu, X, Search, MapPin } from 'lucide-react'
+import { ShoppingCart, User, Menu, X, Search } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { useCart } from '../contexts/CartContext'
 
@@ -30,26 +29,26 @@ const Header: React.FC = () => {
   }
 
   return (
-    <header style={{ 
-      backgroundColor: '#ffffff', 
+    <header style={{
+      backgroundColor: '#ffffff',
       borderBottom: '2px solid #e5e7eb',
       boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)'
     }}>
       <div className="container">
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'space-between', 
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           padding: '1.2rem 0',
           gap: '2rem'
         }}>
           {/* Logo */}
           <Link to="/" style={{ textDecoration: 'none', flexShrink: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <div style={{ 
-                width: '3rem', 
-                height: '3rem', 
-                backgroundColor: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', 
+              <div style={{
+                width: '3rem',
+                height: '3rem',
+                backgroundColor: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
                 background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
                 borderRadius: '0.75rem',
                 display: 'flex',
@@ -63,18 +62,18 @@ const Header: React.FC = () => {
                 U
               </div>
               <div>
-                <h1 style={{ 
-                  fontSize: '1.5rem', 
-                  fontWeight: '800', 
-                  color: '#1f2937', 
+                <h1 style={{
+                  fontSize: '1.5rem',
+                  fontWeight: '800',
+                  color: '#1f2937',
                   margin: 0,
                   letterSpacing: '-0.025em'
                 }}>
                   University Store
                 </h1>
-                <p style={{ 
-                  fontSize: '0.75rem', 
-                  color: '#6b7280', 
+                <p style={{
+                  fontSize: '0.75rem',
+                  color: '#6b7280',
                   margin: 0,
                   fontWeight: '500'
                 }}>
@@ -87,9 +86,9 @@ const Header: React.FC = () => {
           {/* Desktop Navigation */}
           <nav style={{ display: 'none' }} className="desktop-nav">
             <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
-              <Link to="/" style={{ 
-                textDecoration: 'none', 
-                color: '#374151', 
+              <Link to="/" style={{
+                textDecoration: 'none',
+                color: '#374151',
                 fontWeight: '600',
                 fontSize: '0.95rem',
                 padding: '0.5rem 0',
@@ -106,9 +105,9 @@ const Header: React.FC = () => {
               }}>
                 Home
               </Link>
-              <Link to="/products" style={{ 
-                textDecoration: 'none', 
-                color: '#374151', 
+              <Link to="/products" style={{
+                textDecoration: 'none',
+                color: '#374151',
                 fontWeight: '600',
                 fontSize: '0.95rem',
                 padding: '0.5rem 0',
@@ -125,9 +124,9 @@ const Header: React.FC = () => {
               }}>
                 All Products
               </Link>
-              <Link to="/contact" style={{ 
-                textDecoration: 'none', 
-                color: '#374151', 
+              <Link to="/contact" style={{
+                textDecoration: 'none',
+                color: '#374151',
                 fontWeight: '600',
                 fontSize: '0.95rem',
                 padding: '0.5rem 0',
@@ -144,9 +143,9 @@ const Header: React.FC = () => {
               }}>
                 Contact Us
               </Link>
-              <Link to="/about" style={{ 
-                textDecoration: 'none', 
-                color: '#374151', 
+              <Link to="/about" style={{
+                textDecoration: 'none',
+                color: '#374151',
                 fontWeight: '600',
                 fontSize: '0.95rem',
                 padding: '0.5rem 0',
@@ -163,9 +162,9 @@ const Header: React.FC = () => {
               }}>
                 About Us
               </Link>
-              <Link to="/designer" style={{ 
-                textDecoration: 'none', 
-                color: '#374151', 
+              <Link to="/designer" style={{
+                textDecoration: 'none',
+                color: '#374151',
                 fontWeight: '600',
                 fontSize: '0.95rem',
                 padding: '0.5rem 0',
@@ -186,24 +185,24 @@ const Header: React.FC = () => {
           </nav>
 
           {/* Search Bar and Actions */}
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
             gap: '1.5rem',
             flex: 1,
             justifyContent: 'flex-end',
             maxWidth: '600px'
           }}>
             {/* Enhanced Search Bar */}
-            <form onSubmit={handleSearch} style={{ 
+            <form onSubmit={handleSearch} style={{
               position: 'relative',
               flex: 1,
               maxWidth: '350px',
               minWidth: '250px'
             }}>
               <div style={{ position: 'relative' }}>
-                <Search 
-                  size={20} 
+                <Search
+                  size={20}
                   style={{
                     position: 'absolute',
                     left: '1rem',
@@ -246,38 +245,9 @@ const Header: React.FC = () => {
               </div>
             </form>
 
-            {/* Maps Button */}
-            <button
-              onClick={() => setShowMaps(!showMaps)}
-              style={{ 
-                background: 'linear-gradient(135deg, #10b981, #059669)',
-                border: 'none',
-                borderRadius: '50%',
-                width: '2.75rem',
-                height: '2.75rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                color: 'white',
-                boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
-                transition: 'all 0.2s ease'
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)'
-                e.currentTarget.style.boxShadow = '0 6px 16px rgba(16, 185, 129, 0.4)'
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(16, 185, 129, 0.3)'
-              }}
-            >
-              <MapPin size={20} />
-            </button>
-
             {/* Cart */}
-            <Link to="/cart" style={{ 
-              position: 'relative', 
+            <Link to="/cart" style={{
+              position: 'relative',
               textDecoration: 'none',
               background: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
               borderRadius: '50%',
@@ -503,43 +473,43 @@ const Header: React.FC = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav style={{ 
+          <nav style={{
             display: 'block',
             borderTop: '1px solid #e5e7eb',
             paddingTop: '1rem',
             paddingBottom: '1rem'
           }} className="mobile-nav">
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <Link 
-                to="/" 
+              <Link
+                to="/"
                 onClick={() => setIsMenuOpen(false)}
                 style={{ textDecoration: 'none', color: '#4b5563', fontWeight: '600', padding: '0.5rem 0' }}
               >
                 Home
               </Link>
-              <Link 
-                to="/products" 
+              <Link
+                to="/products"
                 onClick={() => setIsMenuOpen(false)}
                 style={{ textDecoration: 'none', color: '#4b5563', fontWeight: '600', padding: '0.5rem 0' }}
               >
                 All Products
               </Link>
-              <Link 
-                to="/contact" 
+              <Link
+                to="/contact"
                 onClick={() => setIsMenuOpen(false)}
                 style={{ textDecoration: 'none', color: '#4b5563', fontWeight: '600', padding: '0.5rem 0' }}
               >
                 Contact Us
               </Link>
-              <Link 
-                to="/about" 
+              <Link
+                to="/about"
                 onClick={() => setIsMenuOpen(false)}
                 style={{ textDecoration: 'none', color: '#4b5563', fontWeight: '600', padding: '0.5rem 0' }}
               >
                 About Us
               </Link>
-              <Link 
-                to="/designer" 
+              <Link
+                to="/designer"
                 onClick={() => setIsMenuOpen(false)}
                 style={{ textDecoration: 'none', color: '#4b5563', fontWeight: '600', padding: '0.5rem 0' }}
               >
@@ -547,85 +517,6 @@ const Header: React.FC = () => {
               </Link>
             </div>
           </nav>
-        )}
-
-        {/* Google Maps Integration */}
-        {showMaps && (
-          <div style={{
-            position: 'absolute',
-            top: '100%',
-            left: '0',
-            right: '0',
-            backgroundColor: 'white',
-            borderTop: '2px solid #e5e7eb',
-            boxShadow: '0 8px 25px rgba(0, 0, 0, 0.15)',
-            zIndex: 40,
-            padding: '1rem'
-          }}>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center', 
-              marginBottom: '1rem' 
-            }}>
-              <h3 style={{ 
-                fontSize: '1.25rem', 
-                fontWeight: '700', 
-                color: '#1f2937', 
-                margin: 0 
-              }}>
-                Find Our Store
-              </h3>
-              <button
-                onClick={() => setShowMaps(false)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: '0.25rem',
-                  color: '#6b7280'
-                }}
-              >
-                <X size={24} />
-              </button>
-            </div>
-            <div style={{ 
-              width: '100%', 
-              height: '400px', 
-              borderRadius: '0.75rem', 
-              overflow: 'hidden',
-              border: '2px solid #e5e7eb'
-            }}>
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3308.7839095903033!2d18.424620315080495!3d-33.9248685325324!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1dcc676c9b0c2b21%3A0x5e84b1e8c7b4c2c1!2sUniversity%20of%20Cape%20Town!5e0!3m2!1sen!2sza!4v1620000000000!5m2!1sen!2sza"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="University Store Location"
-              ></iframe>
-            </div>
-            <div style={{ 
-              marginTop: '1rem', 
-              padding: '1rem', 
-              backgroundColor: '#f8fafc', 
-              borderRadius: '0.75rem' 
-            }}>
-              <p style={{ 
-                fontSize: '0.9rem', 
-                color: '#4b5563', 
-                margin: '0 0 0.5rem 0',
-                fontWeight: '600'
-              }}>
-                📍 University Marketing Store
-              </p>
-              <p style={{ fontSize: '0.85rem', color: '#6b7280', margin: 0 }}>
-                University Avenue, Rondebosch, Cape Town, 7700
-              </p>
-            </div>
-          </div>
         )}
       </div>
 

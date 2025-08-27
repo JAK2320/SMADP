@@ -1,4 +1,3 @@
-
 import {
   DollarSign,
   Edit,
@@ -13,7 +12,6 @@ import {
   ArrowLeft,
   Save,
   X,
-  MapPin,
   Upload,
   UserPlus
 } from 'lucide-react';
@@ -394,7 +392,7 @@ const AdminDashboard: React.FC = () => {
 
   const renderBackButton = () => {
     if (viewMode === 'list') return null;
-    
+
     return (
       <button
         onClick={handleBackToList}
@@ -644,39 +642,9 @@ const AdminDashboard: React.FC = () => {
     </div>
   );
 
-  const renderGoogleMaps = (address: string, city: string, province: string) => {
-    const mapUrl = `https://www.google.com/maps/embed/v1/place?key=YOUR_GOOGLE_MAPS_API_KEY&q=${encodeURIComponent(`${address}, ${city}, ${province}, South Africa`)}`;
-    
-    return (
-      <div style={{ marginTop: '1rem' }}>
-        <h4 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '0.5rem', color: '#1e293b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <MapPin size={16} />
-          Location
-        </h4>
-        <div style={{ 
-          width: '100%', 
-          height: '300px', 
-          borderRadius: '0.5rem', 
-          overflow: 'hidden',
-          border: '1px solid #e2e8f0'
-        }}>
-          <iframe
-            src={mapUrl}
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-          />
-        </div>
-      </div>
-    );
-  };
-
   const renderCustomerDetails = () => {
     if (!selectedItem) return null;
-    
+
     return (
       <div style={{ 
         background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)',
@@ -688,7 +656,7 @@ const AdminDashboard: React.FC = () => {
         <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '2rem', color: '#1e293b' }}>
           Customer Details
         </h3>
-        
+
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
           <div>
             <div style={{ marginBottom: '1.5rem' }}>
@@ -699,7 +667,7 @@ const AdminDashboard: React.FC = () => {
                 {selectedItem.firstName} {selectedItem.lastName}
               </p>
             </div>
-            
+
             <div style={{ marginBottom: '1.5rem' }}>
               <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
                 Email
@@ -708,7 +676,7 @@ const AdminDashboard: React.FC = () => {
                 {selectedItem.email}
               </p>
             </div>
-            
+
             <div style={{ marginBottom: '1.5rem' }}>
               <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
                 Payment Method
@@ -717,7 +685,7 @@ const AdminDashboard: React.FC = () => {
                 {selectedItem.paymentMethod || 'N/A'}
               </p>
             </div>
-            
+
             <div style={{ marginBottom: '1.5rem' }}>
               <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
                 Full Address
@@ -729,10 +697,7 @@ const AdminDashboard: React.FC = () => {
               </p>
             </div>
           </div>
-          
-          <div>
-            {renderGoogleMaps(selectedItem.address, selectedItem.city, selectedItem.province)}
-          </div>
+
         </div>
       </div>
     );
@@ -786,7 +751,7 @@ const AdminDashboard: React.FC = () => {
         <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '2rem', color: '#1e293b' }}>
           {viewMode === 'create' ? 'Add New Designer' : 'Edit Designer'}
         </h3>
-        
+
         <form onSubmit={handleSubmit}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
             <div>
@@ -824,7 +789,7 @@ const AdminDashboard: React.FC = () => {
                   </label>
                 </div>
               </div>
-              
+
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
                   Name
@@ -843,7 +808,7 @@ const AdminDashboard: React.FC = () => {
                   required
                 />
               </div>
-              
+
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
                   Title
@@ -862,7 +827,7 @@ const AdminDashboard: React.FC = () => {
                   required
                 />
               </div>
-              
+
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
                   Email
@@ -881,7 +846,7 @@ const AdminDashboard: React.FC = () => {
                   required
                 />
               </div>
-              
+
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
                   Portfolio URL
@@ -900,7 +865,7 @@ const AdminDashboard: React.FC = () => {
                 />
               </div>
             </div>
-            
+
             <div>
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
@@ -921,7 +886,7 @@ const AdminDashboard: React.FC = () => {
                   required
                 />
               </div>
-              
+
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
                   Skills (comma-separated)
@@ -940,7 +905,7 @@ const AdminDashboard: React.FC = () => {
                   placeholder="e.g., Product Design, UX Design, 3D Modeling"
                 />
               </div>
-              
+
               <div style={{ marginBottom: '2rem' }}>
                 <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
                   Products Designed (comma-separated)
@@ -961,7 +926,7 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
             <button
               type="button"
@@ -1040,7 +1005,7 @@ const AdminDashboard: React.FC = () => {
         <h3 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '2rem', color: '#1e293b' }}>
           Create New Admin
         </h3>
-        
+
         <form onSubmit={handleSubmit}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
             <div>
@@ -1062,7 +1027,7 @@ const AdminDashboard: React.FC = () => {
                   required
                 />
               </div>
-              
+
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
                   Last Name
@@ -1082,7 +1047,7 @@ const AdminDashboard: React.FC = () => {
                 />
               </div>
             </div>
-            
+
             <div>
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
@@ -1102,7 +1067,7 @@ const AdminDashboard: React.FC = () => {
                   required
                 />
               </div>
-              
+
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
                   Password
@@ -1121,7 +1086,7 @@ const AdminDashboard: React.FC = () => {
                   required
                 />
               </div>
-              
+
               <div style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
                   Role
@@ -1143,7 +1108,7 @@ const AdminDashboard: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end', marginTop: '2rem' }}>
             <button
               type="button"
@@ -1222,7 +1187,7 @@ const AdminDashboard: React.FC = () => {
           Add {activeTab.slice(0, -1)}
         </button>
       </div>
-      
+
       <div style={{ overflowX: 'auto', backgroundColor: 'white', borderRadius: '0.75rem', border: '1px solid #e2e8f0' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead style={{ backgroundColor: '#f8fafc' }}>
@@ -1392,7 +1357,7 @@ const AdminDashboard: React.FC = () => {
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)' }}>
       {renderHeader()}
       {renderNavigation()}
-      
+
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem' }}>
         {renderBackButton()}
         {renderContent()}
